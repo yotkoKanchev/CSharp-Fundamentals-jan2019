@@ -1,52 +1,21 @@
 ﻿using NUnit.Framework;
+using Moq;
+using Skeleton;
 
-[TestFixture]
 public class HeroTests
 {
-    public Hero.Hero hero;
-
-    [SetUp]
-    public void Setup()
+    public void Hero_GainsExperienceAfterAttackIfTargetDies()
     {
-        this.hero = new Hero.Hero("Geroy");
-    }
+        var mockTarget = new Mock<ITarget>();
+        mockTarget.Setup(p => p.Health).Returns(0);
+        mockTarget.Setup(p => p.IsDead()).Returns(true);
+        mockTarget.Setup(p => p.GiveExperience()).Returns(20);
 
-    [Test]
-    public void ConstructorCreateInstance()
-    {
-        var actualExperience = hero.Experience;
-        var actualName = hero.Name;
-        var expectedExperiance = 0;
-        var expectedName = "Geroy";
-        Assert.AreEqual(expectedExperiance, actualExperience);
-        Assert.AreEqual(expectedName, actualName);
-    }
+        var mockWeapon = new Mock<IWeapon>();
 
-    [Test]
-    public void ConstructorSetAxeWeapon()
-    {
-        var actual = hero.Weapon.AttackPoints;
-        var expected = 10;
-        Assert.AreEqual(expected, actual);
-    }
+        var hero = new Hero("Pesho", mockWeapon.Object);
 
-    [Test]
-    public void AttackIncreaseExperiance()
-    {
-        var dummy = new Dummy(5, 5);
-        hero.Attack(dummy);
-        var actual = hero.Experience;
-        var expected = 5;
-        Assert.AreEqual(expected, actual);
-    }
-
-    [Test]
-    public void AttackDoNotIncreaseExperianceWhenTragetIsStillAlive()
-    {
-        var dummy = new Dummy(15, 15);
-        hero.Attack(dummy);
-        var actual = hero.Experience;
-        var expected = 0;
-        Assert.AreEqual(expected, actual);
+        hero.Attack(mockTarget.Object);
+        Assert.AreEqual(20, hero.Experience);
     }
 }

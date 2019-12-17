@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
 
-[TestFixture]
 public class DummyTests
 {
     [Test]
@@ -63,30 +62,22 @@ public class DummyTests
     }
 
     [Test]
-    public void DeadDummyGivesXPPointsWhenDies()
+    public void GiveExperience_GivesXPPointsWhenIsNotDead()
     {
-        var dummy = new Dummy(10, 10);
-        var hero = new Hero.Hero("Vasko");
+        var dummy = new Dummy(0, 10);
 
-        hero.Attack(dummy);
 
-        var actual = hero.Experience;
+        var actual = dummy.GiveExperience();
         var expected = 10;
 
         Assert.AreEqual(expected, actual, "Dummy does not gives XP points when is dead");
     }
 
     [Test]
-    public void DeadDummyDoNotGivesXPPointsWhenIsAlive()
+    public void GiveExperience_ThrowInvalidOperationExceptionWhenIsDead()
     {
-        var dummy = new Dummy(100, 100);
-        var hero = new Hero.Hero("Vasko");
+        var dummy = new Dummy(10, 10);
 
-        hero.Attack(dummy);
-
-        var actual = hero.Experience;
-        var expected = 0;
-
-        Assert.AreEqual(expected, actual, "Dummy gives XP points when is alive");
+        Assert.Throws<InvalidOperationException>(() => dummy.GiveExperience());
     }
 }
